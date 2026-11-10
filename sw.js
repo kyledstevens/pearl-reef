@@ -1,4 +1,4 @@
-const CACHE='pearl-reef-5d277ef0c4';
+const CACHE='pearl-reef-3efc12249c';
 const CORE=['./','index.html','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE&&k.startsWith('pearl-reef-')).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
