@@ -2165,6 +2165,28 @@ $('#resetBtn').onclick=()=>{
 $('#diveBtn').onclick=()=>{ac();SFX.tap();startDive()};
 $('#buildBtn').onclick=()=>{ac();SFX.tap();openBuild()};
 $('#petBtn').onclick=()=>{ac();SFX.tap();renderPets();openLayer('petLayer')};
+function renderSuits(){
+  const sl=$('#suitList');sl.innerHTML='';
+  SUITS.forEach(Q=>{
+    const own=S.suits.includes(Q.id),wear=S.suit===Q.id,can=S.pearls>=Q.cost;
+    const card=document.createElement('div');card.className='card';const c=document.createElement('canvas');card.appendChild(c);
+    const g=prepCanvas(c,96,84);drawDiver(g,44,46,1,0,Q.id,S.hat,1);
+    card.insertAdjacentHTML('beforeend',`<div class="meta"><h4>${Q.name}</h4>${wear?'<button class="buy wearing" disabled>Wearing it</button>':own?'<button class="buy done">Wear</button>':`<button class="buy" ${can?'':'disabled'}>Get ${pearlHTML} ${Q.cost}</button>${can?'':`<span class="need">Need ${Q.cost-S.pearls} more pearls</span>`}`}</div>`);
+    const b=card.querySelector('.buy');
+    if(!wear)b.onclick=()=>{if(!own){if(S.pearls<Q.cost)return;S.pearls-=Q.cost;S.suits.push(Q.id);SFX.win()}else SFX.tap();S.suit=Q.id;save();hud();sparkle(diver.x,diver.y,16,Q.c);renderSuits()};
+    sl.appendChild(card);
+  });
+  const hl=$('#hatList');hl.innerHTML='';
+  HATS.forEach(Q=>{
+    const own=S.hats.includes(Q.id),wear=S.hat===Q.id,can=S.pearls>=Q.cost;
+    const card=document.createElement('div');card.className='card';const c=document.createElement('canvas');card.appendChild(c);
+    const g=prepCanvas(c,96,84);drawDiver(g,44,50,1,0,S.suit,Q.id,1);
+    card.insertAdjacentHTML('beforeend',`<div class="meta"><h4>${Q.name}</h4>${wear?'<button class="buy wearing" disabled>Wearing it</button>':own?'<button class="buy done">Wear</button>':`<button class="buy" ${can?'':'disabled'}>Get ${pearlHTML} ${Q.cost}</button>${can?'':`<span class="need">Need ${Q.cost-S.pearls} more pearls</span>`}`}</div>`);
+    const b=card.querySelector('.buy');
+    if(!wear)b.onclick=()=>{if(!own){if(S.pearls<Q.cost)return;S.pearls-=Q.cost;S.hats.push(Q.id);SFX.win()}else SFX.tap();S.hat=Q.id;save();hud();renderSuits()};
+    hl.appendChild(card);
+  });
+}
 $('#suitBtn').onclick=()=>{ac();SFX.tap();renderSuits();openLayer('suitLayer')};
 $('#mapBtn').onclick=()=>{ac();SFX.tap();openMap()};
 $('#gearBtn').onclick=()=>{ac();SFX.tap();renderSettings();openLayer('setLayer')};
